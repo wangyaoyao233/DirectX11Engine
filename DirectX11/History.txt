@@ -1,0 +1,46 @@
+/*system header*/
+#include "Main.h"
+#include "Renderer.h"
+#include "Manager.h"
+/*tools header*/
+/*scenes header*/
+/*gameobjects header*/
+/*self header*/
+
+
+//	XMFLOAT3 example;
+//	//赋值, XMFLOAT3只存储值
+//	example = XMFLOAT3(0.0f, 0.0f, 0.0f);
+//
+//	//计算, XMVECTOR类型才可以计算
+//	XMVECTOR cal = XMLoadFloat3(&example);//载入XMFLOAT3的值
+//	cal += XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+//	//将 XMVECTOR 赋值给 XMFLOAT3
+//	XMStoreFloat3(&example, cal);
+//
+//	//======================
+//	XMFLOAT4X4 world;
+//	XMMATRIX I = XMMatrixIdentity();
+//	//将矩阵存储为XMFLOAT4X4
+//	XMStoreFloat4x4(&world, I);
+//	//将XMFLOAT4X4读入矩阵
+//	XMMATRIX matrix = XMLoadFloat4x4(&world);
+//
+//	reinterpret_cast<D3DXMATRIX*>(&world);
+
+
+2020
+
+10.1
+1. 完成Windows窗口程序框架
+2. DirectX11初始化
+3. 创建D3D设备 和 D3D设备上下文
+4. DXGI初始化: DXGI 1.2 和 DXGI 1.1
+5. 获取DXGI buffer, 创建渲染目标视图 ID3D11RenderTargetView
+6. 创建深度/模板视图 ID3D11DepthStencilView
+7. 在OM阶段, 设置渲染目标
+8. 在RS阶段, 设置视口区域 Viewports
+9. 顶点着色器创建函数
+10. 像素着色器创建函数
+11. 创建常量缓冲区 Constant Buffer: World, View, Projection
+12. Constant Buffer的更新函数

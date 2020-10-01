@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{44d25ab9-b8b1-49bd-9196-085ee9bb6a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{d0c680fd-6c7e-46d3-8d46-7e2570685b95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{a41e2ebb-7283-4e37-be9e-678333891a7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Main.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="DXTrace.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="DXTrace.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Common.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="UnlitColorVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitColorPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="History.txt" />
+  </ItemGroup>
+</Project>
