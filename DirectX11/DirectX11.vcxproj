@@ -145,24 +145,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="DXTrace.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Text.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="DXTrace.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli" />
+    <None Include="LightHelper.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="UnlitColorPS.hlsl">

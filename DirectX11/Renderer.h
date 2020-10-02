@@ -64,8 +64,8 @@ public:
 	static ComPtr<ID3D11Device> GetDevice();
 	static ComPtr<ID3D11DeviceContext> GetDeviceContext();
 private:
-	static ComPtr<ID3D11Device> m_D3DDevice;
-	static ComPtr<ID3D11Device> m_D3DDevice1;
+	static ComPtr<ID3D11Device> m_D3DDevice;// D3D11设备
+	static ComPtr<ID3D11Device> m_D3DDevice1;// D3D11.1设备
 	static ComPtr<ID3D11DeviceContext> m_ImmediateContext;
 	static ComPtr<ID3D11DeviceContext> m_ImmediateContext1;
 	static ComPtr<IDXGISwapChain> m_pSwapChain;
@@ -78,8 +78,12 @@ private:
 	static ComPtr<ID3D11Buffer> m_ViewBuffer;
 	static ComPtr<ID3D11Buffer> m_ProjectionBuffer;
 
+	static ComPtr<ID2D1Factory> m_pd2dFactory;// D2D工厂
+	static ComPtr<IDWriteFactory> m_pdwriteFactory;// DWrite工厂
+
+
 	static UINT m_4xMsaaQuality;
 
 	static void CreateConstantBuffer();
-
+	static void InitDirect2D();
 };

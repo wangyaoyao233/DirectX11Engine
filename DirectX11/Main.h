@@ -7,6 +7,9 @@
 #include <DirectXMath.h>
 #include <assert.h>
 
+#include <d2d1.h>
+#include <dwrite.h>
+
 using namespace DirectX;
 
 template<typename T>
@@ -23,6 +26,9 @@ using ComPtr = Microsoft::WRL::ComPtr<T>;
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib, "winmm.lib")
+
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
 
 #define SCREEN_WIDTH	 (1280)
 #define SCREEN_HEIGHT	 (720)

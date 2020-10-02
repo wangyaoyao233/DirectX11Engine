@@ -44,3 +44,12 @@
 10. 像素着色器创建函数
 11. 创建常量缓冲区 Constant Buffer: World, View, Projection
 12. Constant Buffer的更新函数
+13. Camera完成
+
+10.2
+1. 光照系统
+2. 平行光
+3. 点光
+4. 聚光灯
+5. 光栅化状态
+6. D2D文字渲染

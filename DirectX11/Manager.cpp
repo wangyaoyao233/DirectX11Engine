@@ -2,7 +2,7 @@
 #include "Main.h"
 #include "Renderer.h"
 /*tools header*/
-
+#include "Text.h"
 /*scenes header*/
 
 /*gameobjects header*/
@@ -34,6 +34,8 @@ void CManager::Draw()
 	CRenderer::Begin();
 
 	g_Polygon->Draw();
+
+	CText::Draw2DText(L"english, 中文, 日本語");
 
 	CRenderer::End();
 }

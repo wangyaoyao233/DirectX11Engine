@@ -1,5 +1,7 @@
 #include "Main.h"
 #include "Manager.h"
+#include "Mouse.h"
+#include "Keyboard.h"
 
 HWND g_Window;
 
@@ -135,16 +137,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_ESCAPE:
-			DestroyWindow(hWnd);
-			break;
-		}
-		break;
+	//case WM_KEYDOWN:
+	//	switch (wParam)
+	//	{
+	//	case VK_ESCAPE:
+	//		DestroyWindow(hWnd);
+	//		break;
+	//	}
+	//	break;
 
-		// 监测这些鼠标事件
+
+	// 监测这些鼠标事件
 	case WM_INPUT:
 
 	case WM_LBUTTONDOWN:
@@ -161,10 +164,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEHOVER:
 	case WM_MOUSEMOVE:
 		//g_Mouse->ProcessMessage(uMsg, wParam, lParam);
+		DirectX::Mouse::ProcessMessage(uMsg, wParam, lParam);
+		return 0;
+
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		switch (wParam)
+		{
+		case VK_ESCAPE:
+			DestroyWindow(hWnd);
+			break;
+		}
+		DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
 		return 0;
 
 	case WM_ACTIVATEAPP:
 		//g_Mouse->ProcessMessage(uMsg, wParam, lParam);
+		DirectX::Mouse::ProcessMessage(uMsg, wParam, lParam);
+		DirectX::Keyboard::ProcessMessage(uMsg, wParam, lParam);
 		return 0;
 
 	default:

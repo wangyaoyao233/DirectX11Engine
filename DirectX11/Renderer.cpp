@@ -5,7 +5,7 @@
 #include "DXTrace.h"
 #include "d3dUtil.h"
 /*tools header*/
-
+#include "Text.h"
 /*scenes header*/
 
 /*gameobjects header*/
@@ -28,13 +28,17 @@ ComPtr<ID3D11Buffer> CRenderer::m_ViewBuffer;
 ComPtr<ID3D11Buffer> CRenderer::m_ProjectionBuffer;
 
 
+ComPtr<ID2D1Factory> CRenderer::m_pd2dFactory;// D2D工厂
+ComPtr<IDWriteFactory> CRenderer::m_pdwriteFactory;// DWrite工厂
+
+
 UINT CRenderer::m_4xMsaaQuality;
 
 bool CRenderer::Init()
 {
 	HRESULT hr = S_OK;
 
-	UINT createDeviceFlags = 0;
+	UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if defined(DEBUG) || defined(_DEBUG)  
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -90,7 +94,7 @@ bool CRenderer::Init()
 
 	// 检测 MSAA支持的质量等级
 	m_D3DDevice->CheckMultisampleQualityLevels(
-		DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality);
+		DXGI_FORMAT_B8G8R8A8_UNORM, 4, &m_4xMsaaQuality);//DXGI_FORMAT_R8G8B8A8_UNORM
 	assert(m_4xMsaaQuality > 0);
 
 
@@ -117,7 +121,7 @@ bool CRenderer::Init()
 		ZeroMemory(&sd, sizeof(sd));
 		sd.Width = SCREEN_WIDTH;
 		sd.Height = SCREEN_HEIGHT;
-		sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		sd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//DXGI_FORMAT_R8G8B8A8_UNORM
 		sd.SampleDesc.Count = 4;
 		sd.SampleDesc.Quality = m_4xMsaaQuality - 1;
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -145,7 +149,7 @@ bool CRenderer::Init()
 		sd.BufferDesc.Height = SCREEN_HEIGHT;
 		sd.BufferDesc.RefreshRate.Numerator = 60;
 		sd.BufferDesc.RefreshRate.Denominator = 1;
-		sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//DXGI_FORMAT_R8G8B8A8_UNORM
 		sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		sd.SampleDesc.Count = 4;
@@ -166,12 +170,28 @@ bool CRenderer::Init()
 	D3D11SetDebugObjectName(m_ImmediateContext.Get(), "ImmediateContext");
 	DXGISetDebugObjectName(m_pSwapChain.Get(), "SwapChain");
 
+	InitDirect2D();
+
 	// 每当窗口被重新调整大小的时候，都需要调用这个OnResize函数。现在调用
 	// 以避免代码重复
 	OnResize();
 
+	
 	//Create Constant Buffer
 	CreateConstantBuffer();
+
+	//光栅化状态设定 RasterizerState
+	D3D11_RASTERIZER_DESC rd;
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_BACK;
+	rd.DepthClipEnable = TRUE;
+	rd.MultisampleEnable = FALSE;
+
+	ComPtr<ID3D11RasterizerState> rs;
+	m_D3DDevice->CreateRasterizerState(&rd, rs.GetAddressOf());
+	m_ImmediateContext->RSSetState(rs.Get());
+
 	return true;
 }
 
@@ -185,7 +205,7 @@ void CRenderer::Uninit()
 
 void CRenderer::Begin()
 {
-	float ClearColor[4] = { 0.6f, 0.6f, 0.6f, 1.0f };
+	float ClearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	m_ImmediateContext->ClearRenderTargetView(m_RenderTargetView.Get(), ClearColor);
 	m_ImmediateContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
@@ -197,6 +217,12 @@ void CRenderer::End()
 
 void CRenderer::OnResize()
 {
+	assert(m_pd2dFactory);
+	assert(m_pdwriteFactory);
+	
+	// D2D: 释放D2D相关资源
+	CText::ResetResource();
+
 	assert(m_ImmediateContext);
 	assert(m_D3DDevice);
 	assert(m_pSwapChain);
@@ -215,7 +241,7 @@ void CRenderer::OnResize()
 
 	// 重设交换链并且重新创建渲染目标视图
 	ComPtr<ID3D11Texture2D> backBuffer;
-	HR(m_pSwapChain->ResizeBuffers(1, SCREEN_WIDTH, SCREEN_HEIGHT, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+	HR(m_pSwapChain->ResizeBuffers(1, SCREEN_WIDTH, SCREEN_HEIGHT, DXGI_FORMAT_B8G8R8A8_UNORM, 0));//DXGI_FORMAT_R8G8B8A8_UNORM
 	HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
 	HR(m_D3DDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_RenderTargetView.GetAddressOf()));
 
@@ -260,6 +286,10 @@ void CRenderer::OnResize()
 	D3D11SetDebugObjectName(m_DepthStencilBuffer.Get(), "DepthStencilBuffer");
 	D3D11SetDebugObjectName(m_DepthStencilView.Get(), "DepthStencilView");
 	D3D11SetDebugObjectName(m_RenderTargetView.Get(), "BackBufferRTV[0]");
+
+
+	// D2D: 创建一个DXGI表面渲染目标
+	CText::CreateDxgiSurfaceRenderTarget(m_pSwapChain, m_pd2dFactory, m_pdwriteFactory);
 }
 
 void CRenderer::SetWorldViewProjection2D()
@@ -324,8 +354,6 @@ void CRenderer::CreateVertexShader(ID3D11VertexShader** vertexShader, ID3D11Inpu
 	FILE* file = nullptr;
 	long int fsize;
 
-	//int err = fopen_s(&file, fileName.c_str(), "rb");
-	//assert(err != 0);
 	file = fopen(fileName.c_str(), "rb");
 	fsize = _filelength(_fileno(file));
 	unsigned char* buffer = new unsigned char[fsize];
@@ -352,8 +380,6 @@ void CRenderer::CreatePixelShader(ID3D11PixelShader** pixelShader, std::string f
 	FILE* file = nullptr;
 	long int fsize;
 
-	//int err = fopen_s(&file, fileName.c_str(), "rb");
-	//assert(err != 0);
 	file = fopen(fileName.c_str(), "rb");
 	fsize = _filelength(_fileno(file));
 	unsigned char* buffer = new unsigned char[fsize];
@@ -395,4 +421,11 @@ void CRenderer::CreateConstantBuffer()
 	//ProjectionBuffer--> b2
 	m_D3DDevice->CreateBuffer(&cbd, nullptr, m_ProjectionBuffer.GetAddressOf());
 	m_ImmediateContext->VSSetConstantBuffers(2, 1, m_ProjectionBuffer.GetAddressOf());
+}
+
+void CRenderer::InitDirect2D()
+{
+	// 创建D2D工厂
+	HR(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pd2dFactory.GetAddressOf()));
+	HR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(m_pdwriteFactory.GetAddressOf())));
 }
