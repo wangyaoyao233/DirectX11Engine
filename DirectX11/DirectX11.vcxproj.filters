@@ -13,6 +13,9 @@
     <Filter Include="Tool">
       <UniqueIdentifier>{a21b88db-02ff-494f-a4c3-6427b4626fe0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{0e9612e7-b7ac-437d-a0b1-8709ee43711f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -45,11 +48,32 @@
     <ClInclude Include="Mouse.h">
       <Filter>Tool</Filter>
     </ClInclude>
-    <ClInclude Include="LightHelper.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="LightHelper.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStates.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +107,27 @@
     <ClCompile Include="Text.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStates.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli">
@@ -93,10 +138,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="UnlitColorVS.hlsl">
+    <FxCompile Include="LightPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="UnlitColorPS.hlsl">
+    <FxCompile Include="LightVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="2DVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="2DPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

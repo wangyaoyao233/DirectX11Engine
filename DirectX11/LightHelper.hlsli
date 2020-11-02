@@ -44,9 +44,13 @@ struct SpotLight
 
 cbuffer LightBuffer : register(b7)
 {
-    DirectionalLight dirLight;
-    PointLight pointLight;
-    SpotLight spotLight;
+    DirectionalLight dirLight[10];
+    PointLight pointLight[10];
+    SpotLight spotLight[10];
+    int numDirLight;
+    int numPointLight;
+    int numSpotLight;
+    float Pad;
 }
 
 //计算平行光/方向光函数(光向量是与光照射方向相反的单位向量)

@@ -6,6 +6,7 @@
 #include "d3dUtil.h"
 /*tools header*/
 #include "Text.h"
+#include "RenderStates.h"
 /*scenes header*/
 
 /*gameobjects header*/
@@ -30,6 +31,8 @@ ComPtr<ID3D11Buffer> CRenderer::m_ProjectionBuffer;
 
 ComPtr<ID2D1Factory> CRenderer::m_pd2dFactory;// D2D工厂
 ComPtr<IDWriteFactory> CRenderer::m_pdwriteFactory;// DWrite工厂
+
+ComPtr<ID3D11SamplerState> CRenderer::m_pSamplerState;// 采样器
 
 
 UINT CRenderer::m_4xMsaaQuality;
@@ -180,6 +183,9 @@ bool CRenderer::Init()
 	//Create Constant Buffer
 	CreateConstantBuffer();
 
+
+	CRenderStates::InitAll(m_D3DDevice.Get());
+
 	//光栅化状态设定 RasterizerState
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
@@ -191,6 +197,21 @@ bool CRenderer::Init()
 	ComPtr<ID3D11RasterizerState> rs;
 	m_D3DDevice->CreateRasterizerState(&rd, rs.GetAddressOf());
 	m_ImmediateContext->RSSetState(rs.Get());
+
+
+	// 设置采样器
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	HR(m_D3DDevice->CreateSamplerState(&sampDesc, m_pSamplerState.GetAddressOf()));
+	m_ImmediateContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
 
 	return true;
 }
@@ -403,6 +424,7 @@ ComPtr<ID3D11DeviceContext> CRenderer::GetDeviceContext()
 
 void CRenderer::CreateConstantBuffer()
 {
+	// 设置常量缓冲区描述
 	D3D11_BUFFER_DESC cbd;
 	ZeroMemory(&cbd, sizeof(cbd));
 	cbd.Usage = D3D11_USAGE_DYNAMIC;
@@ -412,6 +434,7 @@ void CRenderer::CreateConstantBuffer()
 	cbd.StructureByteStride = sizeof(float);
 	cbd.ByteWidth = sizeof(XMMATRIX);
 
+	// 新建常量缓冲区
 	//WorldBuffer--> b0
 	m_D3DDevice->CreateBuffer(&cbd, nullptr, m_WorldBuffer.GetAddressOf());
 	m_ImmediateContext->VSSetConstantBuffers(0, 1, m_WorldBuffer.GetAddressOf());

@@ -81,6 +81,8 @@ private:
 	static ComPtr<ID2D1Factory> m_pd2dFactory;// D2D工厂
 	static ComPtr<IDWriteFactory> m_pdwriteFactory;// DWrite工厂
 
+	static ComPtr<ID3D11SamplerState> m_pSamplerState;// 采样器
+
 
 	static UINT m_4xMsaaQuality;
 

@@ -2,40 +2,40 @@
 #include "Main.h"
 #include "Renderer.h"
 /*tools header*/
-#include "Text.h"
 /*scenes header*/
-
+#include "Game.h"
 /*gameobjects header*/
-#include "Polygon.h"
 /*self header*/
 #include "Manager.h"
 
-CPolygon* g_Polygon;
+CScene* CManager::m_Scene = nullptr;
+
 
 void CManager::Init()
 {
 	CRenderer::Init();
 
-	g_Polygon = new CPolygon();
-	g_Polygon->Init();
+	SetScene<CGame>();
 }
 
 void CManager::Uninit()
 {
+	m_Scene->Uninit();
+	delete m_Scene;
+	m_Scene = nullptr;
+
 	CRenderer::Uninit();
 }
 
 void CManager::Update()
 {
+	m_Scene->Update();
 }
 
 void CManager::Draw()
 {
 	CRenderer::Begin();
-
-	g_Polygon->Draw();
-
-	CText::Draw2DText(L"english, 中文, 日本語");
+	m_Scene->Draw();
 
 	CRenderer::End();
 }

@@ -10,6 +10,9 @@
 #include <d2d1.h>
 #include <dwrite.h>
 
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
+
 using namespace DirectX;
 
 template<typename T>

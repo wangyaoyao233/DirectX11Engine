@@ -17,22 +17,22 @@ void CPolygon::Init()
 
 	vertex[0].Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertex[0].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
 	vertex[1].Position = XMFLOAT3(400.0f, 0.0f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertex[1].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
 	vertex[2].Position = XMFLOAT3(0.0f, 400.0f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertex[2].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
 	vertex[3].Position = XMFLOAT3(400.0f, 400.0f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	vertex[3].Diffuse = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
 
 	D3D11_BUFFER_DESC bd;
@@ -50,8 +50,11 @@ void CPolygon::Init()
 
 	CRenderer::GetDevice()->CreateBuffer(&bd, &sd, m_VertexBuffer.GetAddressOf());
 
-	CRenderer::CreateVertexShader(m_VertexShader.GetAddressOf(), m_VertexLayout.GetAddressOf(), "UnlitColorVS.cso");
-	CRenderer::CreatePixelShader(m_PixelShader.GetAddressOf(), "UnlitColorPS.cso");
+	CRenderer::CreateVertexShader(m_VertexShader.GetAddressOf(), m_VertexLayout.GetAddressOf(), "2DVS.cso");
+	CRenderer::CreatePixelShader(m_PixelShader.GetAddressOf(), "2DPS.cso");
+
+	CreateDDSTextureFromFile(CRenderer::GetDevice().Get(), L"../Asset/Texture/TreeColors_A.dds", nullptr, m_Texture.GetAddressOf());
+	assert(m_Texture);
 }
 
 void CPolygon::Uninit()
@@ -76,6 +79,11 @@ void CPolygon::Draw()
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), &stride, &offset);
+
+
+	//Set ShaderResource
+	CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, m_Texture.GetAddressOf());
+
 
 	//Set PrimitiveTopology
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
