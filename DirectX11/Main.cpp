@@ -2,6 +2,7 @@
 #include "Manager.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "GameTimer.h"
 
 HWND g_Window;
 
@@ -16,12 +17,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 void OtherInit()
 {
-
+	/*GameTimer Init*/
+	GameTimer::Reset();
 }
 
 void OtherUpdate()
 {
-
+	/*GameTimer Update*/
+	GameTimer::Tick();
 }
 
 void OtherUninit()

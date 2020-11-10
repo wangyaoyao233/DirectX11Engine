@@ -1,4 +1,5 @@
 #pragma once
+#include "LightHelper.h"
 struct LightBuffer
 {
 	DirectionalLight dirLight[10];
@@ -13,19 +14,18 @@ struct LightBuffer
 class CLight
 {
 public:
-	void InitResource();
+	static void InitResource();
 
-	void AddDirLight(DirectionalLight& light);
-	void AddPointLight(PointLight& light);
-	void AddSpotLight(SpotLight& light);
+	static void AddDirLight(DirectionalLight& light);
+	static void AddPointLight(PointLight& light);
+	static void AddSpotLight(SpotLight& light);
 
-	void ResetDirLight(DirectionalLight& light, int id);
-	void ResetPointLight(PointLight& light, int id);
-	void ResetSpotLight(SpotLight& light, int id);
+	static void ResetDirLight(DirectionalLight& light, int id);
+	static void ResetPointLight(PointLight& light, int id);
+	static void ResetSpotLight(SpotLight& light, int id);
 
-	void UpdateLightConstantBuffer();
+	static void UpdateLightConstantBuffer();
 private:
-	ComPtr<ID3D11Buffer> m_LightBuffer;
-	LightBuffer m_Light;
+	static ComPtr<ID3D11Buffer> m_LightBuffer;
+	static LightBuffer m_Light;
 };
-

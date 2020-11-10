@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene.h"
-class CGame :
-    public CScene
+class CGame :public CScene
 {
 public:
 	void Init() override;

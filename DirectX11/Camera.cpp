@@ -34,5 +34,5 @@ void CCamera::Draw()
 	XMStoreFloat4x4(&m_Projection, projectionMatrix);
 	CRenderer::SetProjectionMatrix(projectionMatrix);
 
-	//CRenderer::SetCameraPosition(m_Position);
+	/*CRenderer::SetCameraPosition(m_Position);*/
 }

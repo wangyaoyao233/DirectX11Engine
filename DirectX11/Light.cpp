@@ -2,11 +2,14 @@
 #include "Main.h"
 #include "Renderer.h"
 /*tools header*/
-#include "LightHelper.h"
+
 /*scenes header*/
 /*gameobjects header*/
 /*self header*/
 #include "Light.h"
+
+ComPtr<ID3D11Buffer> CLight::m_LightBuffer;
+LightBuffer CLight::m_Light;
 
 void CLight::InitResource()
 {
@@ -22,7 +25,8 @@ void CLight::InitResource()
 
 	// 新建常量缓冲区
 	CRenderer::GetDevice()->CreateBuffer(&cbd, nullptr, m_LightBuffer.GetAddressOf());
-	CRenderer::GetDeviceContext()->PSSetConstantBuffers(7, 0, m_LightBuffer.GetAddressOf());
+	CRenderer::GetDeviceContext()->VSSetConstantBuffers(7, 1, m_LightBuffer.GetAddressOf());
+	CRenderer::GetDeviceContext()->PSSetConstantBuffers(7, 1, m_LightBuffer.GetAddressOf());
 
 	// 初始化光
 	// 一个方向光
@@ -30,8 +34,16 @@ void CLight::InitResource()
 	m_Light.dirLight[0].Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_Light.dirLight[0].Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_Light.dirLight[0].Direction = XMFLOAT3(1.0f, 0.0f, 1.0f);
+	//一个点光
+	m_Light.pointLight[0].Ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	m_Light.pointLight[0].Diffuse = XMFLOAT4(0.0f, 0.9f, 0.0f, 1.0f);
+	m_Light.pointLight[0].Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_Light.pointLight[0].Position = XMFLOAT3(3.0f, 3.0f, -3.0f);
+	m_Light.pointLight[0].Range = 10.0f;
+	m_Light.pointLight[0].Att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+
 	m_Light.numDirLight = 1;
-	m_Light.numPointLight = 0;
+	m_Light.numPointLight = 1;
 	m_Light.numSpotLight = 0;
 
 }

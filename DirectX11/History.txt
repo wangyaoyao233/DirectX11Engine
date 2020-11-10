@@ -72,3 +72,15 @@
 1. 添加Scene基类
 2. 修改Manager, 使用画面迁移
 3. 添加CGame场景
+
+
+11.3
+1. 添加GameTimer类, 修改main
+2. 添加AnimationModel类
+
+11.10
+1. 修复问题: plaeyr忘记添加shader和vertexLayout
+2. 问题: 模型没有texture     --fixed
+	可能原因: 没有添加光线  
+3. 问题: 模型没有material    --fixed
+	

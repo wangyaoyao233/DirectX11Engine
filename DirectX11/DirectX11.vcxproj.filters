@@ -75,6 +75,15 @@
     <ClInclude Include="Game.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="GameTimer.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationModel.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -127,6 +136,15 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationModel.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

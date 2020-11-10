@@ -35,14 +35,14 @@ struct DX11_SUBSET
 	DX11_MODEL_MATERIAL	Material;
 };
 
-struct LIGHT
-{
-	BOOL		Enable;
-	BOOL		Dummy[3];//16byte境界用
-	XMFLOAT4	Direction;
-	XMFLOAT4	Diffuse;
-	XMFLOAT4	Ambient;
-};
+//struct LIGHT
+//{
+//	BOOL		Enable;
+//	BOOL		Dummy[3];//16byte境界用
+//	XMFLOAT4	Direction;
+//	XMFLOAT4	Diffuse;
+//	XMFLOAT4	Ambient;
+//};
 
 class CRenderer
 {
@@ -57,6 +57,8 @@ public:
 	static void SetWorldMatrix(XMMATRIX& WorldMatrix);
 	static void SetViewMatrix(XMMATRIX& ViewMatrix);
 	static void SetProjectionMatrix(XMMATRIX& ProjectionMatrix);
+
+	static void SetMaterial(MATERIAL& Material);
 
 	static void CreateVertexShader(ID3D11VertexShader** vertexShader, ID3D11InputLayout** vertexLayout, std::string fileName);
 	static void CreatePixelShader(ID3D11PixelShader** pixelShader, std::string fileName);
@@ -77,6 +79,7 @@ private:
 	static ComPtr<ID3D11Buffer> m_WorldBuffer;
 	static ComPtr<ID3D11Buffer> m_ViewBuffer;
 	static ComPtr<ID3D11Buffer> m_ProjectionBuffer;
+	static ComPtr<ID3D11Buffer> m_MaterialBuffer;
 
 	static ComPtr<ID2D1Factory> m_pd2dFactory;// D2D工厂
 	static ComPtr<IDWriteFactory> m_pdwriteFactory;// DWrite工厂

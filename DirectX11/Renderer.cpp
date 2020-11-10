@@ -27,6 +27,7 @@ ComPtr<ID3D11Texture2D> CRenderer::m_DepthStencilBuffer;
 ComPtr<ID3D11Buffer> CRenderer::m_WorldBuffer;
 ComPtr<ID3D11Buffer> CRenderer::m_ViewBuffer;
 ComPtr<ID3D11Buffer> CRenderer::m_ProjectionBuffer;
+ComPtr<ID3D11Buffer> CRenderer::m_MaterialBuffer;
 
 
 ComPtr<ID2D1Factory> CRenderer::m_pd2dFactory;// D2D工厂
@@ -318,57 +319,88 @@ void CRenderer::SetWorldViewProjection2D()
 	XMMATRIX world = XMMatrixIdentity();
 	world = XMMatrixTranspose(world);
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(world), &world, sizeof(world));
-	m_ImmediateContext->Unmap(m_WorldBuffer.Get(), 0);
-	
+	m_ImmediateContext->UpdateSubresource(m_WorldBuffer.Get(), 0, nullptr, &world, 0, 0);
 
 	XMMATRIX view = XMMatrixIdentity();
 	view = XMMatrixTranspose(view);
-
-	HR(m_ImmediateContext->Map(m_ViewBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(view), &view, sizeof(view));
-	m_ImmediateContext->Unmap(m_ViewBuffer.Get(), 0);
-
+	m_ImmediateContext->UpdateSubresource(m_ViewBuffer.Get(), 0, nullptr, &view, 0, 0);
 
 	XMMATRIX projection = XMMatrixOrthographicOffCenterLH(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
 	projection = XMMatrixTranspose(projection);
+	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer.Get(), 0, nullptr, &projection, 0, 0);
 
-	HR(m_ImmediateContext->Map(m_ProjectionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(projection), &projection, sizeof(projection));
-	m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
+
+	//XMMATRIX world = XMMatrixIdentity();
+	//world = XMMatrixTranspose(world);
+
+	//D3D11_MAPPED_SUBRESOURCE mappedData;
+	//HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(world), &world, sizeof(world));
+	//m_ImmediateContext->Unmap(m_WorldBuffer.Get(), 0);
+	//
+
+	//XMMATRIX view = XMMatrixIdentity();
+	//view = XMMatrixTranspose(view);
+
+	//HR(m_ImmediateContext->Map(m_ViewBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(view), &view, sizeof(view));
+	//m_ImmediateContext->Unmap(m_ViewBuffer.Get(), 0);
+
+
+	//XMMATRIX projection = XMMatrixOrthographicOffCenterLH(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
+	//projection = XMMatrixTranspose(projection);
+
+	//HR(m_ImmediateContext->Map(m_ProjectionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(projection), &projection, sizeof(projection));
+	//m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
 }
 
 void CRenderer::SetWorldMatrix(XMMATRIX& WorldMatrix)
 {
-	XMMATRIX world = XMMatrixTranspose(WorldMatrix);
+	WorldMatrix = XMMatrixTranspose(WorldMatrix);
+	m_ImmediateContext->UpdateSubresource(m_WorldBuffer.Get(), 0, nullptr, &WorldMatrix, 0, 0);
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(world), &world, sizeof(world));
-	m_ImmediateContext->Unmap(m_WorldBuffer.Get(), 0);	
+	//WorldMatrix = XMMatrixTranspose(WorldMatrix);
+
+	//D3D11_MAPPED_SUBRESOURCE mappedData;
+	//HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &WorldMatrix, sizeof(XMMATRIX));
+	//m_ImmediateContext->Unmap(m_WorldBuffer.Get(), 0);	
 }
 
 void CRenderer::SetViewMatrix(XMMATRIX& ViewMatrix)
 {
-	XMMATRIX view = XMMatrixTranspose(ViewMatrix);
+	ViewMatrix = XMMatrixTranspose(ViewMatrix);
+	m_ImmediateContext->UpdateSubresource(m_ViewBuffer.Get(), 0, nullptr, &ViewMatrix, 0, 0);
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	HR(m_ImmediateContext->Map(m_ViewBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(view), &view, sizeof(view));
-	m_ImmediateContext->Unmap(m_ViewBuffer.Get(), 0);
+	//ViewMatrix = XMMatrixTranspose(ViewMatrix);
+
+	//D3D11_MAPPED_SUBRESOURCE mappedData;
+	//HR(m_ImmediateContext->Map(m_ViewBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &ViewMatrix, sizeof(XMMATRIX));
+	//m_ImmediateContext->Unmap(m_ViewBuffer.Get(), 0);
 }
 
 void CRenderer::SetProjectionMatrix(XMMATRIX& ProjectionMatrix)
 {
-	XMMATRIX projection = XMMatrixTranspose(ProjectionMatrix);
+	ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
+	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer.Get(), 0, nullptr, &ProjectionMatrix, 0, 0);
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(projection), &projection, sizeof(projection));
-	m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
+	//ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
+
+	//D3D11_MAPPED_SUBRESOURCE mappedData;
+	//HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &ProjectionMatrix, sizeof(XMMATRIX));
+	//m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
 }
+
+void CRenderer::SetMaterial(MATERIAL& Material)
+{
+	m_ImmediateContext->UpdateSubresource(m_MaterialBuffer.Get(), 0, nullptr, &Material, 0, 0);
+}
+
+
+
 
 void CRenderer::CreateVertexShader(ID3D11VertexShader** vertexShader, ID3D11InputLayout** vertexLayout, std::string fileName)
 {
@@ -427,11 +459,14 @@ void CRenderer::CreateConstantBuffer()
 	// 设置常量缓冲区描述
 	D3D11_BUFFER_DESC cbd;
 	ZeroMemory(&cbd, sizeof(cbd));
-	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	//cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.Usage = D3D11_USAGE_DEFAULT;
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.CPUAccessFlags = 0;
 	cbd.MiscFlags = 0;
 	cbd.StructureByteStride = sizeof(float);
+
 	cbd.ByteWidth = sizeof(XMMATRIX);
 
 	// 新建常量缓冲区
@@ -444,6 +479,12 @@ void CRenderer::CreateConstantBuffer()
 	//ProjectionBuffer--> b2
 	m_D3DDevice->CreateBuffer(&cbd, nullptr, m_ProjectionBuffer.GetAddressOf());
 	m_ImmediateContext->VSSetConstantBuffers(2, 1, m_ProjectionBuffer.GetAddressOf());
+
+	//MaterialBuffer--> b3
+	cbd.ByteWidth = sizeof(MATERIAL);
+	m_D3DDevice->CreateBuffer(&cbd, nullptr, m_MaterialBuffer.GetAddressOf());
+	m_ImmediateContext->VSSetConstantBuffers(3, 1, m_MaterialBuffer.GetAddressOf());
+	m_ImmediateContext->PSSetConstantBuffers(3, 1, m_MaterialBuffer.GetAddressOf());
 }
 
 void CRenderer::InitDirect2D()

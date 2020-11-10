@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINMAX
 #pragma warning(disable : 4996)
 #include <Windows.h>
 #include <d3d11_1.h>
