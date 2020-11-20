@@ -4,6 +4,7 @@
 #include "Manager.h"
 /*tools header*/
 #include "Text.h"
+#include "CGUI.h"
 /*scenes header*/
 /*gameobjects header*/
 #include "Light.h"
@@ -30,6 +31,13 @@ void CGame::Uninit()
 void CGame::Update()
 {
 	CScene::Update();
+	ImGui::Begin("Change position");
+
+	ImGui::SliderFloat3("Drag float3", m_Pos, -10.0f, 10.0f);
+
+	ImGui::End();
+
+	GetGameObject<CPlayer>()->SetPosition(XMFLOAT3(m_Pos[0], m_Pos[1], m_Pos[2]));
 }
 
 void CGame::Draw()

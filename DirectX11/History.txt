@@ -83,4 +83,8 @@
 2. 问题: 模型没有texture     --fixed
 	可能原因: 没有添加光线  
 3. 问题: 模型没有material    --fixed
+
+11.20
+1. 添加imgui
+2. 测试利用imgui修改位置
 	
