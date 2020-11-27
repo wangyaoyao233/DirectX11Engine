@@ -36,11 +36,11 @@ void CLight::InitResource()
 	m_Light.dirLight[0].Direction = XMFLOAT3(1.0f, 0.0f, 1.0f);
 	//一个点光
 	m_Light.pointLight[0].Ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	m_Light.pointLight[0].Diffuse = XMFLOAT4(0.0f, 0.9f, 0.0f, 1.0f);
+	m_Light.pointLight[0].Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_Light.pointLight[0].Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_Light.pointLight[0].Position = XMFLOAT3(3.0f, 3.0f, -3.0f);
-	m_Light.pointLight[0].Range = 10.0f;
-	m_Light.pointLight[0].Att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+	m_Light.pointLight[0].Range = 8.0f;
+	m_Light.pointLight[0].Att = XMFLOAT3(0.1f, 0.1f, 0.0f);
 
 	m_Light.numDirLight = 1;
 	m_Light.numPointLight = 1;

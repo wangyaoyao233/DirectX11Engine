@@ -11,14 +11,17 @@
 #include "Camera.h"
 #include "Polygon.h"
 #include "Player.h"
+#include "Field.h"
 /*self header*/
 #include "Game.h"
 
 void CGame::Init()
 {
 	AddGameObject<CCamera>(0);
-	AddGameObject<CPolygon>(2);
+	//AddGameObject<CPolygon>(2);
 	AddGameObject<CPlayer>(1);
+	AddGameObject<CField>(1);
+
 
 	CLight::InitResource();
 }

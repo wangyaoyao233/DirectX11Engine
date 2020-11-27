@@ -3,6 +3,7 @@
 #include "Renderer.h"
 /*tools header*/
 #include "CGUI.h"
+#include "input.h"
 /*scenes header*/
 #include "Game.h"
 /*gameobjects header*/
@@ -22,6 +23,8 @@ void CManager::Init()
 {
 	CRenderer::Init();
 	CGUI::Init();
+	CInput::Init();
+
 
 	SetScene<CGame>();
 }
@@ -32,13 +35,15 @@ void CManager::Uninit()
 	delete m_Scene;
 	m_Scene = nullptr;
 
-
+	CInput::Uninit();
 	CGUI::Uninit();
 	CRenderer::Uninit();
 }
 
 void CManager::Update()
 {
+	CInput::Update();
+
 	{
 		// Start the Dear ImGui frame
 		ImGui_ImplDX11_NewFrame();

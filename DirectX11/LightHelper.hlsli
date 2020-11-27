@@ -1,8 +1,5 @@
 #include "Common.hlsli"
 
-
-
-
 struct DirectionalLight
 {
     float4 Ambient;
@@ -53,7 +50,7 @@ cbuffer LightBuffer : register(b7)
     float Pad;
 }
 
-//计算平行光/方向光函数(光向量是与光照射方向相反的单位向量)
+// 计算平行光/方向光函数(光向量是与光照射方向相反的单位向量)
 void ComputeDirectionalLight(MATERIAL mat, DirectionalLight L, float3 normal, float3 toEye,
         out float4 ambient, out float4 diffuse, out float4 spec)
 {
@@ -89,7 +86,7 @@ void ComputeDirectionalLight(MATERIAL mat, DirectionalLight L, float3 normal, fl
 }
 
 
-//计算点光
+// 计算点光
 void ComputePointLight(MATERIAL mat, PointLight L, float3 pos, float3 normal, float3 toEye,
         out float4 ambient, out float4 diffuse, out float4 spec)
 {
@@ -136,7 +133,7 @@ void ComputePointLight(MATERIAL mat, PointLight L, float3 pos, float3 normal, fl
     spec *= att;
 }
 
-//计算聚光灯
+// 计算聚光灯
 void ComputeSpotLight(MATERIAL mat, SpotLight L, float3 pos, float3 normal, float3 toEye,
         out float4 ambient, out float4 diffuse, out float4 spec)
 {
@@ -183,4 +180,55 @@ void ComputeSpotLight(MATERIAL mat, SpotLight L, float3 pos, float3 normal, floa
     ambient *= spot;
     diffuse *= att;
     spec *= att;
+}
+
+
+
+
+// 计算总的光线
+float4 ComputeCommonLights(PS_IN In, float4 texColor, float3 normal, float3 toEyeW)
+{
+  // 初始化为0
+    float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 A = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 D = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 S = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    int i; //cnt
+    
+    // 计算方向光
+    for (i = 0; i < numDirLight; ++i)
+    {
+        ComputeDirectionalLight(Material, dirLight[i], normal, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
+    
+         
+    // 计算点光
+    for (i = 0; i < numPointLight; ++i)
+    {
+        ComputePointLight(Material, pointLight[i], In.WorldPosition.xyz, normal, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
+        
+    
+    // 计算聚光灯
+    for (i = 0; i < numSpotLight; ++i)
+    {
+        ComputeSpotLight(Material, spotLight[i], In.WorldPosition.xyz, normal, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
+    
+    float4 litColor = texColor * (ambient + diffuse) + spec;
+    litColor.a = Material.Diffuse.a * In.Diffuse.a;
+    
+    return litColor;
 }

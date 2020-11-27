@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Manager.h"
 /*tools header*/
+#include "input.h"
 /*scenes header*/
 /*gameobjects header*/
 /*self header*/
@@ -20,6 +21,35 @@ void CCamera::Uninit()
 
 void CCamera::Update()
 {
+	//载入 XMFLOAT3 的值
+	XMVECTOR pos = XMLoadFloat3(&m_Position);
+
+	if (CInput::GetKeyPress('H'))
+	{
+		pos -= g_XMIdentityR0;
+	}
+	if (CInput::GetKeyPress('K'))
+	{
+		pos += g_XMIdentityR0;
+	}
+	if (CInput::GetKeyPress('U'))
+	{
+		pos += g_XMIdentityR2;
+	}
+	if (CInput::GetKeyPress('J'))
+	{
+		pos -= g_XMIdentityR2;
+	}
+	if (CInput::GetKeyPress('Y'))
+	{
+		pos += g_XMIdentityR1;
+	}
+	if (CInput::GetKeyPress('I'))
+	{
+		pos -= g_XMIdentityR1;
+	}
+
+	XMStoreFloat3(&m_Position, pos);
 }
 
 void CCamera::Draw()

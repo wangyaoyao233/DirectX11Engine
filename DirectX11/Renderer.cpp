@@ -181,13 +181,13 @@ bool CRenderer::Init()
 	OnResize();
 
 	
-	//Create Constant Buffer
+	// Create Constant Buffer
 	CreateConstantBuffer();
 
 
 	CRenderStates::InitAll(m_D3DDevice.Get());
 
-	//光栅化状态设定 RasterizerState
+	// 光栅化状态设定 RasterizerState
 	D3D11_RASTERIZER_DESC rd;
 	ZeroMemory(&rd, sizeof(rd));
 	rd.FillMode = D3D11_FILL_SOLID;
@@ -355,7 +355,7 @@ void CRenderer::SetWorldViewProjection2D()
 	//m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
 }
 
-void CRenderer::SetWorldMatrix(XMMATRIX& WorldMatrix)
+void CRenderer::SetWorldMatrix(XMMATRIX WorldMatrix)
 {
 	WorldMatrix = XMMatrixTranspose(WorldMatrix);
 	m_ImmediateContext->UpdateSubresource(m_WorldBuffer.Get(), 0, nullptr, &WorldMatrix, 0, 0);
@@ -364,11 +364,11 @@ void CRenderer::SetWorldMatrix(XMMATRIX& WorldMatrix)
 
 	//D3D11_MAPPED_SUBRESOURCE mappedData;
 	//HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &WorldMatrix, sizeof(XMMATRIX));
+	//memcpy_s(mappedData.pData, sizeof(WorldMatrix), &WorldMatrix, sizeof(WorldMatrix));
 	//m_ImmediateContext->Unmap(m_WorldBuffer.Get(), 0);	
 }
 
-void CRenderer::SetViewMatrix(XMMATRIX& ViewMatrix)
+void CRenderer::SetViewMatrix(XMMATRIX ViewMatrix)
 {
 	ViewMatrix = XMMatrixTranspose(ViewMatrix);
 	m_ImmediateContext->UpdateSubresource(m_ViewBuffer.Get(), 0, nullptr, &ViewMatrix, 0, 0);
@@ -377,11 +377,11 @@ void CRenderer::SetViewMatrix(XMMATRIX& ViewMatrix)
 
 	//D3D11_MAPPED_SUBRESOURCE mappedData;
 	//HR(m_ImmediateContext->Map(m_ViewBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &ViewMatrix, sizeof(XMMATRIX));
+	//memcpy_s(mappedData.pData, sizeof(ViewMatrix), &ViewMatrix, sizeof(ViewMatrix));
 	//m_ImmediateContext->Unmap(m_ViewBuffer.Get(), 0);
 }
 
-void CRenderer::SetProjectionMatrix(XMMATRIX& ProjectionMatrix)
+void CRenderer::SetProjectionMatrix(XMMATRIX ProjectionMatrix)
 {
 	ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
 	m_ImmediateContext->UpdateSubresource(m_ProjectionBuffer.Get(), 0, nullptr, &ProjectionMatrix, 0, 0);
@@ -390,13 +390,18 @@ void CRenderer::SetProjectionMatrix(XMMATRIX& ProjectionMatrix)
 
 	//D3D11_MAPPED_SUBRESOURCE mappedData;
 	//HR(m_ImmediateContext->Map(m_WorldBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	//memcpy_s(mappedData.pData, sizeof(XMMATRIX), &ProjectionMatrix, sizeof(XMMATRIX));
+	//memcpy_s(mappedData.pData, sizeof(ProjectionMatrix), &ProjectionMatrix, sizeof(ProjectionMatrix));
 	//m_ImmediateContext->Unmap(m_ProjectionBuffer.Get(), 0);
 }
 
 void CRenderer::SetMaterial(MATERIAL& Material)
 {
 	m_ImmediateContext->UpdateSubresource(m_MaterialBuffer.Get(), 0, nullptr, &Material, 0, 0);
+
+	//D3D11_MAPPED_SUBRESOURCE mappedData;
+	//HR(m_ImmediateContext->Map(m_MaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	//memcpy_s(mappedData.pData, sizeof(MATERIAL), &Material, sizeof(MATERIAL));
+	//m_ImmediateContext->Unmap(m_MaterialBuffer.Get(), 0);
 }
 
 
@@ -420,7 +425,9 @@ void CRenderer::CreateVertexShader(ID3D11VertexShader** vertexShader, ID3D11Inpu
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 6, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 10, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 10, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 4 * 16, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	UINT numElements = ARRAYSIZE(layout);
 	m_D3DDevice->CreateInputLayout(layout, numElements, buffer, fsize, vertexLayout);
@@ -459,13 +466,13 @@ void CRenderer::CreateConstantBuffer()
 	// 设置常量缓冲区描述
 	D3D11_BUFFER_DESC cbd;
 	ZeroMemory(&cbd, sizeof(cbd));
-	//cbd.Usage = D3D11_USAGE_DYNAMIC;
-	cbd.Usage = D3D11_USAGE_DEFAULT;
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	/* Dynamic */
+	//cbd.Usage = D3D11_USAGE_DYNAMIC;
 	//cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	/* Default */
+	cbd.Usage = D3D11_USAGE_DEFAULT;
 	cbd.CPUAccessFlags = 0;
-	cbd.MiscFlags = 0;
-	cbd.StructureByteStride = sizeof(float);
 
 	cbd.ByteWidth = sizeof(XMMATRIX);
 

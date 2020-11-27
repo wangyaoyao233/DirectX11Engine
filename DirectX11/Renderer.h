@@ -7,6 +7,8 @@ struct VERTEX_3D
 	XMFLOAT3 Normal;
 	XMFLOAT4 Diffuse;
 	XMFLOAT2 TexCoord;
+	XMFLOAT4 Tangent = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f);
+	XMFLOAT4 Binormal = XMFLOAT4(0.0f, 0.0f, -1.0f, 0.0f);;
 };
 
 // マテリアル構造体
@@ -54,9 +56,9 @@ public:
 	static void OnResize();
 
 	static void SetWorldViewProjection2D();
-	static void SetWorldMatrix(XMMATRIX& WorldMatrix);
-	static void SetViewMatrix(XMMATRIX& ViewMatrix);
-	static void SetProjectionMatrix(XMMATRIX& ProjectionMatrix);
+	static void SetWorldMatrix(XMMATRIX WorldMatrix);
+	static void SetViewMatrix(XMMATRIX ViewMatrix);
+	static void SetProjectionMatrix(XMMATRIX ProjectionMatrix);
 
 	static void SetMaterial(MATERIAL& Material);
 

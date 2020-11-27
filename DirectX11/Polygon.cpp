@@ -38,11 +38,9 @@ void CPolygon::Init()
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	//bd.Usage = D3D11_USAGE_DYNAMIC;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
-	//bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(sd));
@@ -67,26 +65,26 @@ void CPolygon::Update()
 
 void CPolygon::Draw()
 {
-	//Set InputLayout
+	// Set InputLayout
 	CRenderer::GetDeviceContext()->IASetInputLayout(m_VertexLayout.Get());
-	//Set Shader
+	// Set Shader
 	CRenderer::GetDeviceContext()->VSSetShader(m_VertexShader.Get(), nullptr, 0);
 	CRenderer::GetDeviceContext()->PSSetShader(m_PixelShader.Get(), nullptr, 0);
-	//Set WVP
+	// Set WVP
 	CRenderer::SetWorldViewProjection2D();
 
-	//Set VertexBuffer
+	// Set VertexBuffer
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	CRenderer::GetDeviceContext()->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), &stride, &offset);
 
 
-	//Set ShaderResource
+	// Set ShaderResource
 	CRenderer::GetDeviceContext()->PSSetShaderResources(0, 1, m_Texture.GetAddressOf());
 
 
-	//Set PrimitiveTopology
+	// Set PrimitiveTopology
 	CRenderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	//Draw
+	// Draw
 	CRenderer::GetDeviceContext()->Draw(4, 0);
 }
